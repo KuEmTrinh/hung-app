@@ -1,0 +1,11 @@
+.dashboardTitle{
+    font-weight: bold;
+    font-size: 26px;
+    color: #383576;
+}
+.dashboardSubtitle{
+    font-weight: bold;
+    font-size: 12px;
+    color: #7976AE;
+    margin: 1rem 0;
+}

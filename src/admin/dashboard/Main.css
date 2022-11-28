@@ -1,0 +1,79 @@
+.dashboardMain {
+  width: 100%;
+  height: 100vh;
+  background-color: #f8fafb;
+  display: flex;
+}
+.dashboardNav {
+  width: 8rem;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+}
+.dashboardNavContent {
+  height: auto;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+.dashboardNavColumn {
+  height: 80vh;
+  width: 4rem;
+  border-radius: 15px;
+  background-color: #6f6af2;
+  display: flex;
+  justify-content: center;
+}
+.dashboardNavItemList {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.dashboardNavItem {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  margin: 1rem 0;
+}
+.dashboardNavItemText p {
+  font-weight: bold;
+  color: #fff;
+  font-size: 10px;
+}
+.dashboardNavItemText a:link {
+  text-decoration: none;
+}
+.dashboardNavItemText a:hover {
+  text-decoration: none;
+}
+.dashboardNavItemText a:visited {
+  text-decoration: none;
+}
+.dashboardNavItemText a:active {
+  text-decoration: none;
+}
+
+.dashboardContent {
+  width: 100%;
+  height: 100vh;
+  padding: 2rem 2rem 2rem 0;
+  box-sizing: border-box;
+}
+.productTypeContent {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+.productTypeContentLeft {
+  width: 15rem;
+}
+.productTypeContentRight {
+  width: calc(100% - 15rem);
+  margin-left: 1rem;
+}
+.confirmButtonNewType {
+  margin: 0.5rem 0;
+}

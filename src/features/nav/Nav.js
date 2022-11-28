@@ -1,7 +1,8 @@
 import React from "react";
 import "./Nav.css";
 import logo from "../../WEBLOGO.png";
-import SearchIcon from '@mui/icons-material/Search';
+import SearchIcon from "@mui/icons-material/Search";
+import { Outlet, Link } from "react-router-dom";
 export default function Nav() {
   return (
     <div className="nav">
@@ -11,10 +12,14 @@ export default function Nav() {
       </div>
       <div className="navPages">
         <div className="navPage">
-          <p>ホーム</p>
+          <Link to={`/`}>
+            <p className="linkRouterText">ホーム</p>
+          </Link>
         </div>
         <div className="navPage">
-          <p>買取流れ</p>
+          <Link to={`/guide`}>
+            <p className="linkRouterText">買取流れ</p>
+          </Link>
         </div>
         <div className="navPage">
           <p>利用規約</p>
@@ -27,7 +32,9 @@ export default function Nav() {
         </div>
       </div>
       <div className="navIcons">
-        <div className="navIcon"><SearchIcon></SearchIcon></div>
+        <div className="navIcon">
+          <SearchIcon></SearchIcon>
+        </div>
       </div>
     </div>
   );

@@ -2,7 +2,7 @@ import React from "react";
 import "./Nav.css";
 import logo from "../../WEBLOGO.png";
 import SearchIcon from "@mui/icons-material/Search";
-import { Outlet, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 export default function Nav() {
   return (
     <div className="nav">
@@ -12,23 +12,29 @@ export default function Nav() {
       </div>
       <div className="navPages">
         <div className="navPage">
-          <Link to={`/`}>
-            <p className="linkRouterText">ホーム</p>
-          </Link>
+          <div className="linkRouterText">
+            <Link to={`/`}>ホーム</Link>
+          </div>
         </div>
         <div className="navPage">
-          <Link to={`/guide`}>
-            <p className="linkRouterText">買取流れ</p>
-          </Link>
+          <div className="linkRouterText">
+            <Link to={`/guide`}>買取流れ</Link>
+          </div>
         </div>
         <div className="navPage">
-          <p>利用規約</p>
+          <div className="linkRouterText">
+            <Link to={`/guide`}>利用規約</Link>
+          </div>
         </div>
         <div className="navPage">
-          <p>無料査定</p>
+          <div className="linkRouterText">
+            <Link to={`/guide`}>無料査定</Link>
+          </div>
         </div>
         <div className="navPage">
-          <p>その他</p>
+          <div className="linkRouterText">
+            <Link to={`/guide`}>その他</Link>
+          </div>
         </div>
       </div>
       <div className="navIcons">

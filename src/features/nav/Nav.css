@@ -18,9 +18,18 @@
   font-size: 14px;
   padding: 0 2rem;
 }
-.linkRouterText {
+.linkRouterText a:link{
   text-decoration: none;
 }
-.linkRouterText:link {
+.linkRouterText a:visited{
   text-decoration: none;
+}
+.linkRouterText a:hover{
+  text-decoration: none;
+}
+.linkRouterText a:active {
+  text-decoration: none;
+}
+.linkRouterText a{
+  color: #000;
 }

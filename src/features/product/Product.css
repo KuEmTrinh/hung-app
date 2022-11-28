@@ -1,0 +1,18 @@
+.categoryItem{
+    display: flex;
+}
+.categoryTextLink{
+    text-decoration: none;
+}
+.categoryTextLink:hover{
+    text-decoration: none;
+}
+.categoryTextLink:active{
+    text-decoration: none;
+}
+.categoryTextLink:visited{
+    text-decoration: none;
+}
+.categoryTextLink:link{
+    text-decoration: none;
+}

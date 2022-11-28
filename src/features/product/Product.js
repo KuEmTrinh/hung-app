@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import PhoneIphoneIcon from "@mui/icons-material/PhoneIphone";
 import LightIcon from "@mui/icons-material/Light";
 import StarsIcon from "@mui/icons-material/Stars";
@@ -6,32 +6,44 @@ import BrushIcon from "@mui/icons-material/Brush";
 import LiquorIcon from "@mui/icons-material/Liquor";
 import DownloadIcon from "@mui/icons-material/Download";
 import NewReleasesIcon from "@mui/icons-material/NewReleases";
+import "./Product.css";
+import { Link } from "react-router-dom";
 function Categories() {
   return (
     <div className="section section-grey">
       <div className="category">
         <p className="categoryTitle">製品リストを参考</p>
         <div className="categories">
-          <div className="categoryItem categoryItemActive">
-            <PhoneIphoneIcon color="white"></PhoneIphoneIcon>
-            <p>携帯</p>
-          </div>
-          <div className="categoryItem">
-            <LightIcon color="action"></LightIcon>
-            <p>家電</p>
-          </div>
-          <div className="categoryItem">
-            <StarsIcon color="action"></StarsIcon>
-            <p>強化買取中</p>
-          </div>
-          <div className="categoryItem">
-            <BrushIcon color="action"></BrushIcon>
-            <p>化粧品</p>
-          </div>
-          <div className="categoryItem">
-            <LiquorIcon color="action"></LiquorIcon>
-            <p>お酒</p>
-          </div>
+          <Link to={"/"} className="categoryTextLink">
+            <div className="categoryItem">
+              <PhoneIphoneIcon color="white"></PhoneIphoneIcon>
+              <p>携帯</p>
+            </div>
+          </Link>
+          <Link to={"/"} className="categoryTextLink">
+            <div className="categoryItem">
+              <LightIcon color="white"></LightIcon>
+              <p>家電</p>
+            </div>
+          </Link>
+          <Link to={"/"} className="categoryTextLink">
+            <div className="categoryItem categoryItemActive">
+              <StarsIcon color="white"></StarsIcon>
+              <p>強化買取中</p>
+            </div>
+          </Link>
+          <Link to={"/"} className="categoryTextLink">
+            <div className="categoryItem">
+              <BrushIcon color="action"></BrushIcon>
+              <p>化粧品</p>
+            </div>
+          </Link>
+          <Link to={"/"} className="categoryTextLink">
+            <div className="categoryItem">
+              <LiquorIcon color="action"></LiquorIcon>
+              <p>お酒</p>
+            </div>
+          </Link>
         </div>
       </div>
     </div>

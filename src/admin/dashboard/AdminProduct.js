@@ -3,6 +3,7 @@ import DashboardTitle from "../ui/DashboardTitle";
 import DashboardSubtitle from "../ui/DashboardSubtitle";
 import DashboardToast from "../ui/DashboardToast";
 import DashboardModal from "../ui/DashboardModal";
+import NewProduct from "./NewProduct";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Box from "@mui/material/Box";
@@ -13,6 +14,8 @@ import { db } from "../../app/firebase";
 import { firebase } from "../../app/firebase";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
+import { setTypeId } from "../../slice/productSlice";
+import { useDispatch, useSelector } from "react-redux";
 function NewProductTypeComponent({ category }) {
   const toastRef = useRef(null);
   const confirmCreateNewType = async () => {
@@ -44,6 +47,7 @@ function NewProductTypeComponent({ category }) {
         size="small"
         value={typeValue}
         onChange={setNewTypeValue}
+        fullWidth
       />
       {typeValue != "" ? (
         <div className="confirmButtonNewType">
@@ -52,6 +56,7 @@ function NewProductTypeComponent({ category }) {
             onClick={() => {
               confirmCreateNewType();
             }}
+            fullWidth
           >
             {isLoading ? "loading" : "新規"}
           </Button>
@@ -63,38 +68,161 @@ function NewProductTypeComponent({ category }) {
   );
 }
 
-function ProductTypeItemComponent({ item }) {
+function ProductTypeItemComponent({ item, category, selected, setSelected }) {
+  const dispatch = useDispatch();
   return (
-    <div className="productTypeItem">
+    <div
+      className={
+        item.id == selected
+          ? "productTypeItem productTypeItemActive"
+          : "productTypeItem"
+      }
+      onClick={() => {
+        setSelected(item.id);
+        dispatch(setTypeId(item.id));
+      }}
+    >
       <div className="productTypeItemName">
         <p className="productTypeItemNameText">{item.name}</p>
       </div>
       <div className="productTypeItemAction">
-        <div className="productTypeActionIconEdit">
-          <EditIcon
-            color="blackColor"
-            fontSize="small"
-            className="hoverIconColor"
-          ></EditIcon>
-        </div>
-        <div className="productTypeActionIconDelete">
-          <DeleteIcon
-            color="blackColor"
-            fontSize="small"
-            className="hoverIconColor"
-          ></DeleteIcon>
-        </div>
+        <ProductTypeEditComponent
+          item={item}
+          category={category}
+        ></ProductTypeEditComponent>
+        <ProductTypeDeleteComponent
+          item={item}
+          category={category}
+        ></ProductTypeDeleteComponent>
       </div>
     </div>
   );
 }
 
-function ProductTypeEditComponent({}) {
-  return <></>;
+function ProductTypeEditComponent({ item, category }) {
+  const [editToggle, setEditToggle] = useState(false);
+  const [typeName, setTypeName] = useState(item.name);
+  const toastRef = useRef(null);
+  const changeTypeName = (e) => {
+    setTypeName(e.target.value);
+  };
+  const confirmChangeTypeName = () => {
+    const query = db.collection(category).doc(item.id).update({
+      name: typeName,
+      updateAt: firebase.firestore.FieldValue.serverTimestamp(),
+    });
+    return query;
+  };
+
+  const changeConfirm = async () => {
+    await confirmChangeTypeName();
+    await setEditToggle(false);
+    await toastRef.current.openToast();
+  };
+  return (
+    <>
+      <DashboardToast ref={toastRef} message="編集出来ました"></DashboardToast>
+      <DashboardModal
+        show={editToggle}
+        onClose={() => {
+          setEditToggle(false);
+        }}
+      >
+        <DashboardSubtitle>Chỉnh sửa {item.name}</DashboardSubtitle>
+        <TextField
+          id="outlined-basic"
+          label="新し項目入力"
+          variant="outlined"
+          size="small"
+          fullWidth
+          value={typeName}
+          onChange={(e) => {
+            changeTypeName(e);
+          }}
+        />
+        {typeName != item.name ? (
+          <div className="confirmButtonNewType">
+            <Button
+              variant="contained"
+              onClick={() => {
+                changeConfirm();
+              }}
+              fullWidth
+            >
+              編集
+            </Button>
+          </div>
+        ) : (
+          ""
+        )}
+      </DashboardModal>
+      <div
+        className="productTypeActionIconEdit"
+        onClick={() => {
+          setEditToggle(true);
+        }}
+      >
+        <EditIcon
+          color="blackColor"
+          fontSize="small"
+          className="hoverIconColor"
+        ></EditIcon>
+      </div>
+    </>
+  );
+}
+
+function ProductTypeDeleteComponent({ item, category }) {
+  const [deleteToggle, setDeleteToggle] = useState(false);
+
+  const confirmDeleteType = () => {
+    const query = db.collection(category).doc(item.id).delete();
+    return query;
+  };
+
+  const confirmDelete = async () => {
+    await confirmDeleteType();
+    await setDeleteToggle(false);
+  };
+  return (
+    <>
+      <DashboardModal
+        show={deleteToggle}
+        onClose={() => {
+          setDeleteToggle(false);
+        }}
+      >
+        <DashboardSubtitle>{item.name}を削除する？</DashboardSubtitle>
+        <div className="confirmButtonNewType">
+          <Button
+            variant="contained"
+            onClick={() => {
+              confirmDelete();
+            }}
+            fullWidth
+          >
+            同意
+          </Button>
+        </div>
+      </DashboardModal>
+      <div className="productTypeActionIconDelete">
+        <DeleteIcon
+          color="blackColor"
+          fontSize="small"
+          className="hoverIconColor"
+          onClick={() => {
+            setDeleteToggle(true);
+          }}
+        ></DeleteIcon>
+      </div>
+    </>
+  );
 }
 
 function ProductTypeListComponent({ category }) {
   const [types, setTypes] = useState();
+  const [selected, setSelected] = useState();
+  const dispatch = useDispatch();
   useEffect(() => {
     fetchTypeList();
   }, [category]);
@@ -107,6 +235,8 @@ function ProductTypeListComponent({ category }) {
         data.push(item);
       });
       setTypes(data);
+      setSelected(data[0].id);
+      dispatch(setTypeId(data[0].id));
     });
     return query;
   };
@@ -117,6 +247,9 @@ function ProductTypeListComponent({ category }) {
           <ProductTypeItemComponent
             item={el}
             key={el.id}
+            category={category}
+            selected={selected}
+            setSelected={setSelected}
           ></ProductTypeItemComponent>
         );
       })}
@@ -132,9 +265,53 @@ function ProductTypeComponent({ category }) {
   );
 }
 
-export default function AdminProduct() {
-  const [value, setValue] = React.useState("mobile");
+function ProductNewItemComponent({ category }) {
+  const [openToggle, setOpenToggle] = useState(false);
+  return (
+    <>
+      <DashboardModal
+        show={openToggle}
+        onClose={() => {
+          setOpenToggle(false);
+        }}
+      >
+        <NewProduct></NewProduct>
+      </DashboardModal>
+      <Button
+        variant="contained"
+        onClick={() => {
+          setOpenToggle(true);
+        }}
+      >
+        新規
+      </Button>
+    </>
+  );
+}
 
+function ProductItemListComponent({ category }) {
+  const typeId = useSelector((state) => state.product.typeId);
+  const [items, setItems] = useState();
+  useEffect(() => {
+    fetchItemList();
+  }, [typeId]);
+  const fetchItemList = () => {
+    const query = db.collection(category);
+  };
+  return <div>{typeId}</div>;
+}
+
+function ProductComponent({ category }) {
+  return (
+    <>
+      <ProductNewItemComponent category={category}></ProductNewItemComponent>
+      <ProductItemListComponent category={category}></ProductItemListComponent>
+    </>
+  );
+}
+
+export default function AdminProduct() {
+  const [value, setValue] = useState("mobile");
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
@@ -164,6 +341,7 @@ export default function AdminProduct() {
         </div>
         <div className="productTypeContentRight">
           <DashboardSubtitle>製品のリスト</DashboardSubtitle>
+          <ProductComponent category={value}></ProductComponent>
         </div>
       </div>
     </>

@@ -54,9 +54,16 @@ const theme = createTheme({
       // This is green.A700 as hex.
       main: "#6f6af2",
     },
+    danger: {
+      main: "#F32013",
+    },
     whiteColor: {
       // This is green.A700 as hex.
       main: "#fff",
+    },
+    blackColor: {
+      // This is green.A700 as hex.
+      main: "#1c1952",
     },
   },
 });

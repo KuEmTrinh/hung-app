@@ -78,10 +78,52 @@
 .confirmButtonNewType {
   margin: 0.5rem 0;
 }
-.dashboardNavLogoutItem{
+.dashboardNavLogoutItem {
   position: absolute;
   bottom: 1.5rem;
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+.productTypeItem {
+  background-color: #fff;
+  padding: 0.6rem 0.6rem 0.6em 1.4rem;
+  border-radius: 5px;
+  margin-bottom: 0.2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.productTypeItem:hover {
+  transition: 0.3s linear all;
+  box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px,
+    rgba(28, 25, 82, 0.15) 0px 0px 0px 1px;
+}
+.productTypeItemNameText {
+  font-size: 14px;
+  color: #1c1952;
+}
+.hoverIconColor {
+  padding: 3px;
+}
+.productTypeItemAction {
+  display: flex;
+}
+.productTypeActionIconDelete:hover .hoverIconColor {
+  cursor: pointer;
+  transition: 0.2s linear all;
+  padding: 3px;
+  color: #e04a4a;
+  border-radius: 50%;
+  box-shadow: rgba(230, 108, 108, 0.02) 0px 1px 3px 0px,
+    rgba(180, 85, 85, 0.15) 0px 0px 0px 1px;
+}
+.productTypeActionIconEdit:hover .hoverIconColor {
+  cursor: pointer;
+  transition: 0.2s linear all;
+  padding: 3px;
+  color: rgb(111, 106, 242);
+  border-radius: 50%;
+  box-shadow: rgba(111, 106, 242, 0.02) 0px 1px 3px 0px,
+    rgba(111, 106, 242, 0.15) 0px 0px 0px 1px;
 }

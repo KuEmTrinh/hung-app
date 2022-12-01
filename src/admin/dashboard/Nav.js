@@ -3,8 +3,20 @@ import HomeIcon from "@mui/icons-material/Home";
 import PhoneIphoneIcon from "@mui/icons-material/PhoneIphone";
 import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
 import EqualizerIcon from "@mui/icons-material/Equalizer";
+import LogoutIcon from "@mui/icons-material/Logout";
 import { Link } from "react-router-dom";
+import { signOut } from "firebase/auth";
+import { authentication } from "../../app/firebase";
 export default function Nav() {
+  const logOut = () => {
+    signOut(authentication)
+      .then(() => {
+        console.log("da dang xuat");
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
   return (
     <div className="dashboardNav">
       <div className="dashboardNavContent">
@@ -48,6 +60,19 @@ export default function Nav() {
                 <Link to={`/admin`}>
                   <p>アカウント</p>
                 </Link>
+              </div>
+            </div>
+            <div className="dashboardNavLogoutItem">
+              <div className="dashboardNavItemIcon">
+                <LogoutIcon color="whiteColor"></LogoutIcon>
+              </div>
+              <div
+                className="dashboardNavItemText"
+                onClick={() => {
+                  logOut();
+                }}
+              >
+                <p>ログアウト</p>
               </div>
             </div>
           </div>

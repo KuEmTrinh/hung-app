@@ -7,15 +7,26 @@ import { signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import Main from "./dashboard/Main";
 export default function Login() {
   const [isUserSignedIn, setIsUserSignedIn] = useState(false);
+  const [isAdmin, setIsAdmin] = useState("user");
   useEffect(() => {
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
-        const userInfomation = JSON.stringify(user);
-        return setIsUserSignedIn(true);
+        // console.log(user.uid);
+        checkUserIsAdmin(user.uid);
       }
       return setIsUserSignedIn(false);
     });
   }, []);
+  const checkUserIsAdmin = (uid) => {
+    const query = db
+      .collection("user")
+      .doc(uid)
+      .get()
+      .then((querySnapshot) => {
+        setIsAdmin(querySnapshot.data().role);
+      });
+    return query;
+  };
   const setUser = (user) => {
     db.collection("user")
       .doc(user.uid)
@@ -33,6 +44,7 @@ export default function Login() {
             emailVerified: user.emailVerified,
             uid: user.uid,
             photoURL: user.photoURL,
+            role: "user",
           });
         }
       });
@@ -42,7 +54,7 @@ export default function Login() {
     signInWithPopup(authentication, provider)
       .then((res) => {
         setUser(res.user);
-        console.log("Da dang nhap");
+        // console.log("Da dang nhap");
       })
       .catch((error) => {
         console.log("Login Failed");
@@ -50,7 +62,7 @@ export default function Login() {
   };
   return (
     <>
-      {isUserSignedIn ? (
+      {isAdmin == "admin" ? (
         <Main></Main>
       ) : (
         <button

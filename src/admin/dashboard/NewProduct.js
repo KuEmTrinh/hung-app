@@ -83,6 +83,10 @@ export default function NewProduct() {
   const changeSubNameValue = (e) => {
     setSubName(e.target.value);
   };
+  const deleteProperty = (index) => {
+    const newProperties = properties.filter((el) => el != properties[index]);
+    setProperties(newProperties);
+  };
   return (
     <>
       <div className="createProductBox">
@@ -157,16 +161,18 @@ export default function NewProduct() {
             ""
           )}
           <p className="productItemName">{name}</p>
-          <p className="productItemSubName">{subName}</p>
+          <p className="productItemSubName mbt-05">{subName}</p>
           <Stack direction="row" flexWrap="wrap">
             {properties?.map((el, index) => {
               return (
-                <span className="chipLabel">
+                <span className="chipLabel" key={index}>
                   <Chip
                     label={el}
                     variant="outlined"
                     size="small"
-                    onDelete={() => {}}
+                    onDelete={() => {
+                      deleteProperty(index);
+                    }}
                   ></Chip>
                 </span>
               );

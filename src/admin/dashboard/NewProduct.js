@@ -4,7 +4,45 @@ import Button from "@mui/material/Button";
 import DashboardSubtitle from "../ui/DashboardSubtitle";
 import FileUploadIcon from "@mui/icons-material/FileUpload";
 import imageCompression from "browser-image-compression";
+import AddBoxIcon from "@mui/icons-material/AddBox";
 import { ref, getDownloadURL, uploadBytesResumable } from "firebase/storage";
+import Chip from "@mui/material/Chip";
+import Stack from "@mui/material/Stack";
+function PropertiesInputComponent({ setProperties }) {
+  const [property, setProperty] = useState();
+  const changePropertyValue = (e) => {
+    setProperty(e.target.value);
+  };
+  const createNewProperty = async () => {
+    await setProperties((properties) => [...properties, property]);
+    await setProperty("");
+  };
+  return (
+    <div className="productNewProperties">
+      <div className="productPropertyInputBox">
+        <TextField
+          id="outlined-basic"
+          label="性質"
+          variant="outlined"
+          size="small"
+          fullWidth
+          value={property}
+          onChange={(e) => {
+            changePropertyValue(e);
+          }}
+        />
+      </div>
+      <div
+        className="productPropertyConfirmButton"
+        onClick={() => {
+          createNewProperty();
+        }}
+      >
+        <AddBoxIcon color="primary" fontSize="large"></AddBoxIcon>
+      </div>
+    </div>
+  );
+}
 
 export default function NewProduct() {
   const [file, setFile] = useState("");
@@ -12,6 +50,7 @@ export default function NewProduct() {
   const [name, setName] = useState();
   const [subName, setSubName] = useState();
   const [percent, setPercent] = useState(0);
+  const [properties, setProperties] = useState([]);
   useEffect(() => {
     if (!file) {
       setPreview(undefined);
@@ -89,6 +128,10 @@ export default function NewProduct() {
               </div>
             </label>
           </div>
+          <DashboardSubtitle>製品性質管理</DashboardSubtitle>
+          <PropertiesInputComponent
+            setProperties={setProperties}
+          ></PropertiesInputComponent>
           <div className="confirmButtonNewType">
             <Button
               variant="contained"
@@ -115,6 +158,20 @@ export default function NewProduct() {
           )}
           <p className="productItemName">{name}</p>
           <p className="productItemSubName">{subName}</p>
+          <Stack direction="row" flexWrap="wrap">
+            {properties?.map((el, index) => {
+              return (
+                <span className="chipLabel">
+                  <Chip
+                    label={el}
+                    variant="outlined"
+                    size="small"
+                    onDelete={() => {}}
+                  ></Chip>
+                </span>
+              );
+            })}
+          </Stack>
         </div>
       </div>
     </>

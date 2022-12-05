@@ -4,6 +4,7 @@ import DashboardSubtitle from "../ui/DashboardSubtitle";
 import DashboardToast from "../ui/DashboardToast";
 import DashboardModal from "../ui/DashboardModal";
 import NewProduct from "./NewProduct";
+import ProductList from "./ProductList";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Box from "@mui/material/Box";
@@ -15,7 +16,7 @@ import { firebase } from "../../app/firebase";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import { setTypeId } from "../../slice/productSlice";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 function NewProductTypeComponent({ category }) {
   const toastRef = useRef(null);
   const confirmCreateNewType = async () => {
@@ -275,7 +276,10 @@ function ProductNewItemComponent({ category }) {
           setOpenToggle(false);
         }}
       >
-        <NewProduct></NewProduct>
+        <NewProduct
+          category={category}
+          setOpenToggle={setOpenToggle}
+        ></NewProduct>
       </DashboardModal>
       <Button
         variant="contained"
@@ -290,15 +294,7 @@ function ProductNewItemComponent({ category }) {
 }
 
 function ProductItemListComponent({ category }) {
-  const typeId = useSelector((state) => state.product.typeId);
-  const [items, setItems] = useState();
-  useEffect(() => {
-    fetchItemList();
-  }, [typeId]);
-  const fetchItemList = () => {
-    const query = db.collection(category);
-  };
-  return <div>{typeId}</div>;
+  return <ProductList category={category}></ProductList>;
 }
 
 function ProductComponent({ category }) {
@@ -340,7 +336,7 @@ export default function AdminProduct() {
           <ProductTypeListComponent category={value}></ProductTypeListComponent>
         </div>
         <div className="productTypeContentRight">
-          <DashboardSubtitle>製品のリスト</DashboardSubtitle>
+          <DashboardSubtitle>製品管理</DashboardSubtitle>
           <ProductComponent category={value}></ProductComponent>
         </div>
       </div>

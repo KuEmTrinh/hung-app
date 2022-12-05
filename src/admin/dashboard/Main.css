@@ -188,10 +188,15 @@
 .productPropertyInputBox {
   width: 80%;
 }
-.productPropertyConfirmButton{
+.productPropertyConfirmButton {
   cursor: pointer;
 }
-.chipLabel{
+.chipLabel {
   margin-right: 3px;
   margin-bottom: 5px;
+}
+.productSmallPhoto img {
+  width: 25px;
+  height: 25px;
+  object-fit: cover;
 }

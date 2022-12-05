@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import DashboardSubtitle from "../ui/DashboardSubtitle";
@@ -8,6 +9,10 @@ import AddBoxIcon from "@mui/icons-material/AddBox";
 import { ref, getDownloadURL, uploadBytesResumable } from "firebase/storage";
 import Chip from "@mui/material/Chip";
 import Stack from "@mui/material/Stack";
+import DashboardModal from "../ui/DashboardModal";
+import { db } from "../../app/firebase";
+import { firebase } from "../../app/firebase";
+import { storage } from "../../app/firebase";
 function PropertiesInputComponent({ setProperties }) {
   const [property, setProperty] = useState();
   const changePropertyValue = (e) => {
@@ -44,13 +49,16 @@ function PropertiesInputComponent({ setProperties }) {
   );
 }
 
-export default function NewProduct() {
+export default function NewProduct({ category, setOpenToggle }) {
+  const typeId = useSelector((state) => state.product.typeId);
   const [file, setFile] = useState("");
   const [preview, setPreview] = useState();
   const [name, setName] = useState();
   const [subName, setSubName] = useState();
+  const [price, setPrice] = useState();
   const [percent, setPercent] = useState(0);
   const [properties, setProperties] = useState([]);
+  const [createToggle, setCreateToggle] = useState(false);
   useEffect(() => {
     if (!file) {
       setPreview(undefined);
@@ -83,12 +91,80 @@ export default function NewProduct() {
   const changeSubNameValue = (e) => {
     setSubName(e.target.value);
   };
+  const changePriceValue = (e) => {
+    setPrice(e.target.value);
+  };
   const deleteProperty = (index) => {
     const newProperties = properties.filter((el) => el != properties[index]);
     setProperties(newProperties);
   };
+
+  const handleUpload = () => {
+    if (!file) {
+      const url =
+        "https://us.123rf.com/450wm/yehorlisnyi/yehorlisnyi2104/yehorlisnyi210400016/167492439-no-photo-or-blank-image-icon-loading-images-or-missing-image-mark-image-not-available-or-image-comin.jpg?ver=6";
+      createConfirm(url);
+    } else {
+      const storageRef = ref(storage, `/files/${file.name}`);
+      const uploadTask = uploadBytesResumable(storageRef, file);
+      uploadTask.on(
+        "state_changed",
+        (snapshot) => {
+          const percent = Math.round(
+            (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+          );
+
+          // update progress
+          setPercent(percent);
+        },
+        (err) => console.log(err),
+        () => {
+          // download url
+          getDownloadURL(uploadTask.snapshot.ref).then((url) => {
+            createConfirm(url);
+          });
+        }
+      );
+    }
+  };
+  const createConfirm = async (url) => {
+    console.log(category);
+    console.log(typeId);
+    const query = await db
+      .collection(category)
+      .doc(typeId)
+      .collection("product")
+      .add({
+        name: name,
+        subName: subName,
+        properties: properties,
+        price: price,
+        photoUrl: url,
+        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+      });
+    await setCreateToggle(false);
+    await setOpenToggle(false);
+    return query;
+  };
   return (
     <>
+      <DashboardModal
+        show={createToggle}
+        onClose={() => {
+          setCreateToggle(false);
+        }}
+      >
+        <DashboardSubtitle>新し製品を新規する</DashboardSubtitle>
+        <Button
+          variant="contained"
+          onClick={() => {
+            handleUpload();
+          }}
+          fullWidth
+        >
+          確認
+        </Button>
+      </DashboardModal>
       <div className="createProductBox">
         <div className="createProductInputBox">
           <DashboardSubtitle>新しい製品を新規</DashboardSubtitle>
@@ -116,6 +192,20 @@ export default function NewProduct() {
               }}
             />
           </div>
+          <div className="mt-1">
+            <TextField
+              id="outlined-basic"
+              label="製品価格"
+              variant="outlined"
+              size="small"
+              type="number"
+              fullWidth
+              value={price}
+              onChange={(e) => {
+                changePriceValue(e);
+              }}
+            />
+          </div>
           <div className="inputBox">
             <label for="accountSettingInput">
               <div className="accountSettingInputUpload">
@@ -140,7 +230,7 @@ export default function NewProduct() {
             <Button
               variant="contained"
               onClick={() => {
-                //   confirmCreateNewType();
+                setCreateToggle(true);
               }}
               fullWidth
             >

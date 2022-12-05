@@ -5,16 +5,21 @@ import { db } from "../app/firebase";
 import { firebase } from "../app/firebase";
 import { signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import Main from "./dashboard/Main";
+import { setRole, setToken } from "../slice/loginSlice";
+import { useDispatch, useSelector } from "react-redux";
 export default function Login() {
-  const [isUserSignedIn, setIsUserSignedIn] = useState(false);
-  const [isAdmin, setIsAdmin] = useState("user");
+  const dispatch = useDispatch();
+  const userRole = useSelector((state) => state.login.role);
+  const userToken = useSelector((state) => state.login.token);
+  // const [isUserSignedIn, setIsUserSignedIn] = useState(false);
   useEffect(() => {
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
-        // console.log(user.uid);
+        dispatch(setToken(user.uid));
         checkUserIsAdmin(user.uid);
+      } else {
+        dispatch(setToken(""));
       }
-      return setIsUserSignedIn(false);
     });
   }, []);
   const checkUserIsAdmin = (uid) => {
@@ -23,7 +28,8 @@ export default function Login() {
       .doc(uid)
       .get()
       .then((querySnapshot) => {
-        setIsAdmin(querySnapshot.data().role);
+        let role = querySnapshot.data().role;
+        dispatch(setRole(role));
       });
     return query;
   };
@@ -62,8 +68,24 @@ export default function Login() {
   };
   return (
     <>
-      {isAdmin == "admin" ? (
-        <Main></Main>
+      {userToken ? (
+        <>
+          {userRole == "admin" ? (
+            <Main></Main>
+          ) : (
+            <>
+              <p>Bạn không phải là admin</p>
+              <button
+                className="loginButton"
+                onClick={() => {
+                  loginWithGoogle();
+                }}
+              >
+                Đăng nhập bằng Gmail
+              </button>
+            </>
+          )}
+        </>
       ) : (
         <button
           className="loginButton"

@@ -7,11 +7,15 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import { Link } from "react-router-dom";
 import { signOut } from "firebase/auth";
 import { authentication } from "../../app/firebase";
+import { setToken } from "../../slice/loginSlice";
+import { useDispatch } from "react-redux";
 export default function Nav() {
+  const dispatch = useDispatch();
   const logOut = () => {
     signOut(authentication)
       .then(() => {
-        console.log("da dang xuat");
+        dispatch(setToken(""));
+        // console.log("da dang xuat");
       })
       .catch((error) => {
         console.log(error);

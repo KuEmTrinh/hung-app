@@ -7,7 +7,6 @@ export default function Nav() {
   return (
     <div className="nav">
       <div className="navLogo">
-        {" "}
         <img src={logo} alt="logo" />
       </div>
       <div className="navPages">

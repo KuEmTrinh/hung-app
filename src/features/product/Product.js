@@ -8,14 +8,14 @@ import DownloadIcon from "@mui/icons-material/Download";
 import NewReleasesIcon from "@mui/icons-material/NewReleases";
 import "./Product.css";
 import { Link } from "react-router-dom";
-function Categories() {
+function Categories({ activeCategory, setActiveCategory }) {
   return (
     <div className="section section-grey">
       <div className="category">
         <p className="categoryTitle">製品リストを参考</p>
         <div className="categories">
-          <Link to={"/"} className="categoryTextLink">
-            <div className="categoryItem">
+          <Link to={"/"} className="categoryTextLink categoryItemActive">
+            <div className="categoryItem categoryItemActive">
               <PhoneIphoneIcon color="white"></PhoneIphoneIcon>
               <p>携帯</p>
             </div>
@@ -128,9 +128,13 @@ function ProductMain() {
   );
 }
 export default function Product() {
+  const [activeCategory, setActiveCategory] = useState("mobile");
   return (
     <>
-      <Categories></Categories>
+      <Categories
+        activeCategory={activeCategory}
+        setActiveCategory={setActiveCategory}
+      ></Categories>
       <ProductMain></ProductMain>
     </>
   );

@@ -7,8 +7,11 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
+import Chip from "@mui/material/Chip";
 import { useSelector } from "react-redux";
 import { db } from "../../app/firebase";
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
 export default function ProductList({ category }) {
   const typeId = useSelector((state) => state.product.typeId);
   const [items, setItems] = useState();
@@ -46,6 +49,9 @@ export default function ProductList({ category }) {
                 価格
               </TableCell>
               <TableCell align="right">性質</TableCell>
+              <TableCell align="right" width="15%">
+                行動
+              </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -61,7 +67,41 @@ export default function ProductList({ category }) {
                 </TableCell>
                 <TableCell>{row.name}</TableCell>
                 <TableCell align="right">{row.price}</TableCell>
-                <TableCell align="right">{row.properties}</TableCell>
+                <TableCell align="right">
+                  {row.properties?.map((el, index) => {
+                    return (
+                      <span className="chipLabel" key={index}>
+                        <Chip label={el} variant="outlined" size="small"></Chip>
+                      </span>
+                    );
+                  })}
+                </TableCell>
+                <TableCell align="right">
+                  <div className="productActionBox">
+                    <div className="productTypeActionIconDelete">
+                      <DeleteIcon
+                        color="blackColor"
+                        fontSize="small"
+                        className="hoverIconColor"
+                        onClick={() => {
+                          // setDeleteToggle(true);
+                        }}
+                      ></DeleteIcon>
+                    </div>
+                    <div
+                      className="productTypeActionIconEdit"
+                      onClick={() => {
+                        // setEditToggle(true);
+                      }}
+                    >
+                      <EditIcon
+                        color="blackColor"
+                        fontSize="small"
+                        className="hoverIconColor"
+                      ></EditIcon>
+                    </div>
+                  </div>
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>

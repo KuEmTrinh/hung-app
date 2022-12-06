@@ -200,3 +200,9 @@
   height: 25px;
   object-fit: cover;
 }
+
+.productActionBox{
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}

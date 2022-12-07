@@ -41,7 +41,7 @@
   font-size: 14px;
   padding: 7px 21px;
 }
-.categoryItemActive {
+.categoryItemActive .categoryItem {
   color: white;
   background-color: #104f33;
   border-radius: 10px;
@@ -148,7 +148,7 @@
   padding: 6px 16px;
   border-radius: 0 5px 0 4px;
 }
-.productItemPrice p{
+.productItemPrice p {
   color: #fff;
   font-size: 14px;
   font-weight: bold;

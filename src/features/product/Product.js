@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import PhoneIphoneIcon from "@mui/icons-material/PhoneIphone";
 import LightIcon from "@mui/icons-material/Light";
 import StarsIcon from "@mui/icons-material/Stars";
@@ -8,39 +8,74 @@ import DownloadIcon from "@mui/icons-material/Download";
 import NewReleasesIcon from "@mui/icons-material/NewReleases";
 import "./Product.css";
 import { Link } from "react-router-dom";
+import { db } from "../../app/firebase";
 function Categories({ activeCategory, setActiveCategory }) {
   return (
     <div className="section section-grey">
       <div className="category">
         <p className="categoryTitle">製品リストを参考</p>
         <div className="categories">
-          <Link to={"/"} className="categoryTextLink categoryItemActive">
-            <div className="categoryItem categoryItemActive">
+          <Link
+            to={"/"}
+            className={
+              activeCategory == "mobile"
+                ? "categoryTextLink categoryItemActive"
+                : "categoryTextLink"
+            }
+            onClick={() => {
+              setActiveCategory("mobile");
+            }}
+          >
+            <div className="categoryItem">
               <PhoneIphoneIcon color="white"></PhoneIphoneIcon>
               <p>携帯</p>
             </div>
           </Link>
-          <Link to={"/"} className="categoryTextLink">
+          <Link
+            to={"/"}
+            className={
+              activeCategory == "kaden"
+                ? "categoryTextLink categoryItemActive"
+                : "categoryTextLink"
+            }
+            onClick={() => {
+              setActiveCategory("kaden");
+            }}
+          >
             <div className="categoryItem">
               <LightIcon color="white"></LightIcon>
               <p>家電</p>
             </div>
           </Link>
-          <Link to={"/"} className="categoryTextLink">
-            <div className="categoryItem categoryItemActive">
-              <StarsIcon color="white"></StarsIcon>
-              <p>強化買取中</p>
-            </div>
-          </Link>
-          <Link to={"/"} className="categoryTextLink">
+          <Link
+            to={"/"}
+            className={
+              activeCategory == "cosmetic"
+                ? "categoryTextLink categoryItemActive"
+                : "categoryTextLink"
+            }
+            onClick={() => {
+              setActiveCategory("cosmetic");
+            }}
+          >
             <div className="categoryItem">
-              <BrushIcon color="action"></BrushIcon>
+              <BrushIcon color="white"></BrushIcon>
               <p>化粧品</p>
             </div>
           </Link>
-          <Link to={"/"} className="categoryTextLink">
+          <Link
+            to={"/"}
+            className={
+              activeCategory == "sake"
+                ? "categoryTextLink categoryItemActive"
+                : "categoryTextLink"
+            }
+            onClick={() => {
+              setActiveCategory("sake");
+            }}
+          >
             <div className="categoryItem">
-              <LiquorIcon color="action"></LiquorIcon>
+              <LiquorIcon color="white"></LiquorIcon>
               <p>お酒</p>
             </div>
           </Link>
@@ -50,7 +85,7 @@ function Categories({ activeCategory, setActiveCategory }) {
   );
 }
 
-function Navigation() {
+function Navigation({ productTypes, type, setType }) {
   return (
     <div className="productNav">
       <div className="downloadButton mbt-05">
@@ -62,57 +97,136 @@ function Navigation() {
         <p>保険者同意書</p>
       </div>
       <div className="productList">
-        <div className="productListItem">
-          <div className="productListItemName itemNameActive">Iphone</div>
-          <div className="productListItemCount itemCountActive">100</div>
-        </div>
-        <div className="productListItem">
-          <div className="productListItemName">Ipad</div>
-          <div className="productListItemCount">44</div>
-        </div>
-        <div className="productListItem">
-          <div className="productListItemName">Macbook</div>
-          <div className="productListItemCount">22</div>
-        </div>
+        {productTypes ? (
+          <>
+            {productTypes.map((el) => {
+              return (
+                <div
+                  className="productListItem"
+                  key={el.id}
+                  onClick={() => {
+                    setType(el);
+                  }}
+                >
+                  <div
+                    className={
+                      el.name == type.name
+                        ? "productListItemName itemNameActive"
+                        : "productListItemName"
+                    }
+                  >
+                    {el.name}
+                  </div>
+                  <div
+                    className={
+                      el.name == type.name
+                        ? "productListItemCount itemCountActive"
+                        : "productListItemCount"
+                    }
+                  >
+                    100
+                  </div>
+                </div>
+              );
+            })}
+          </>
+        ) : (
+          "Loading"
+        )}
       </div>
     </div>
   );
 }
 
-function Item() {
+function Item({ product }) {
   return (
     <div className="productItem">
       <div className="productItemImage">
-        <img src="https://images.unsplash.com/photo-1664478546384-d57ffe74a78c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80"></img>
+        <img src={product?.photoUrl}></img>
         <div className="productItemPrice">
-          <p>20万9千</p>
+          <p>{product.price}</p>
         </div>
       </div>
       <div className="productItemInfo">
-        <p className="productItemName">Iphone 14 Pro Max</p>
+        <p className="productItemName">{}</p>
         <p className="productItemSubName">256GB, FreeSim 未開封</p>
       </div>
     </div>
   );
 }
 
-function ProductItemList() {
+function ProductItemList({ type, activeCategory }) {
+  const [products, setProducts] = useState();
+  useEffect(() => {
+    if (type != null) {
+      fetchProducts();
+    }
+  }, [type]);
+
+  const fetchProducts = () => {
+    const query = db
+      .collection(activeCategory)
+      .doc(type.id)
+      .collection("product")
+      .get()
+      .then((snapshot) => {
+        const data = [];
+        snapshot.docs.map((doc) => {
+          let item = doc.data();
+          item.id = doc.id;
+          data.push(item);
+        });
+        setProducts(data);
+      });
+    return query;
+  };
   return (
     <div className="productItems">
-      <Item></Item>
-      <Item></Item>
-      <Item></Item>
-      <Item></Item>
-      <Item></Item>
-      <Item></Item>
+      {products ? (
+        <>
+          {products.map((item) => {
+            return <Item product={item} key={item.id}></Item>;
+          })}
+        </>
+      ) : (
+        "Loading"
+      )}
     </div>
   );
 }
 
-function ProductMain() {
+function ProductMain({ activeCategory }) {
+  const [productTypes, setProductTypes] = useState();
+  const [type, setType] = useState();
+  useEffect(() => {
+    fetchProductTypes();
+  }, [activeCategory]);
+
+  const fetchProductTypes = () => {
+    const query = db
+      .collection(activeCategory)
+      .get()
+      .then((snapshot) => {
+        const data = [];
+        snapshot.docs.map((doc) => {
+          let item = doc.data();
+          item.id = doc.id;
+          data.push(item);
+        });
+        // console.log(data);
+        setProductTypes(data);
+        setType(data[0]);
+      });
+
+    return query;
+  };
   return (
     <div className="productMain center width-normal">
-      <Navigation></Navigation>
+      <Navigation
+        productTypes={productTypes}
+        type={type}
+        setType={setType}
+      ></Navigation>
       <div className="productItemList">
         <div className="productNotice">
           <div className="productNoticeIcon">
@@ -122,7 +236,10 @@ function ProductMain() {
             2022年10月21日 iPad Pro 12.9インチ 第6世代 WiFi+Cellular 256GB 黑/銀
           </p>
         </div>
-        <ProductItemList></ProductItemList>
+        <ProductItemList
+          type={type}
+          activeCategory={activeCategory}
+        ></ProductItemList>
       </div>
     </div>
   );
@@ -135,7 +252,7 @@ export default function Product() {
         activeCategory={activeCategory}
         setActiveCategory={setActiveCategory}
       ></Categories>
-      <ProductMain></ProductMain>
+      <ProductMain activeCategory={activeCategory}></ProductMain>
     </>
   );
 }

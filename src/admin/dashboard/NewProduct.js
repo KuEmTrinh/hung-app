@@ -50,6 +50,7 @@ function PropertiesInputComponent({ setProperties }) {
 }
 
 export default function NewProduct({ category, setOpenToggle }) {
+  const typeLength = useSelector((state) => state.product.typeLength);
   const typeId = useSelector((state) => state.product.typeId);
   const [file, setFile] = useState("");
   const [preview, setPreview] = useState();
@@ -127,9 +128,17 @@ export default function NewProduct({ category, setOpenToggle }) {
       );
     }
   };
+
+  const plusCountProduct = () => {
+    const query = db
+      .collection(category)
+      .doc(typeId)
+      .update({
+        count: typeLength + 1,
+      });
+    return query;
+  };
   const createConfirm = async (url) => {
-    console.log(category);
-    console.log(typeId);
     const query = await db
       .collection(category)
       .doc(typeId)
@@ -144,6 +153,7 @@ export default function NewProduct({ category, setOpenToggle }) {
       });
     await setCreateToggle(false);
     await setOpenToggle(false);
+    await plusCountProduct();
     return query;
   };
   return (
@@ -244,7 +254,7 @@ export default function NewProduct({ category, setOpenToggle }) {
             <div className="productImagePreview">
               {file && <img src={preview} />}
               <div className="productItemPrice">
-                <p>1000</p>
+                <p>{price ? <>{price}</> : "????"}</p>
               </div>
             </div>
           ) : (

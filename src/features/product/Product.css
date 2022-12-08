@@ -16,3 +16,6 @@
 .categoryTextLink:link{
     text-decoration: none;
 }
+.productListItem{
+    cursor: pointer;
+}

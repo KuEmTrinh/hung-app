@@ -34,6 +34,7 @@ function NewProductTypeComponent({ category }) {
   const createNewType = () => {
     const query = db.collection(category).add({
       name: typeValue,
+      count: 0,
       createdAt: firebase.firestore.FieldValue.serverTimestamp(),
     });
     return query;

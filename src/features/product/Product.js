@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import PhoneIphoneIcon from "@mui/icons-material/PhoneIphone";
 import LightIcon from "@mui/icons-material/Light";
-import StarsIcon from "@mui/icons-material/Stars";
+import Chip from "@mui/material/Chip";
+import Stack from "@mui/material/Stack";
 import BrushIcon from "@mui/icons-material/Brush";
 import LiquorIcon from "@mui/icons-material/Liquor";
 import DownloadIcon from "@mui/icons-material/Download";
@@ -124,7 +125,7 @@ function Navigation({ productTypes, type, setType }) {
                         : "productListItemCount"
                     }
                   >
-                    100
+                    {el.count != null ? <>{el.count}</> : "未定"}
                   </div>
                 </div>
               );
@@ -148,8 +149,18 @@ function Item({ product }) {
         </div>
       </div>
       <div className="productItemInfo">
-        <p className="productItemName">{}</p>
-        <p className="productItemSubName">256GB, FreeSim 未開封</p>
+        <p className="productItemName">{product.name}</p>
+        <p className="productItemSubName">{product.subName}</p>
+        <div className="mt-05"></div>
+        <Stack direction="row" flexWrap="wrap">
+          {product.properties?.map((el, index) => {
+            return (
+              <span className="chipLabel" key={index}>
+                <Chip label={el} variant="outlined" size="small"></Chip>
+              </span>
+            );
+          })}
+        </Stack>
       </div>
     </div>
   );

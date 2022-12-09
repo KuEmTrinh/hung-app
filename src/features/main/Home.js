@@ -3,6 +3,7 @@ import "./Home.css";
 import Nav from "../nav/Nav";
 import Header from "./Header";
 import { Outlet } from "react-router-dom";
+import Footer from "./Footer";
 
 export default function Home() {
   return (
@@ -12,6 +13,7 @@ export default function Home() {
         <Header></Header>
       </div>
       <Outlet />
+      <Footer></Footer>
     </>
   );
 }

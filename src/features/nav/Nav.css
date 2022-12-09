@@ -18,18 +18,66 @@
   font-size: 14px;
   padding: 0 2rem;
 }
-.linkRouterText a:link{
+.linkRouterText a:link {
   text-decoration: none;
 }
-.linkRouterText a:visited{
+.linkRouterText a:visited {
   text-decoration: none;
 }
-.linkRouterText a:hover{
+.linkRouterText a:hover {
   text-decoration: none;
 }
 .linkRouterText a:active {
   text-decoration: none;
 }
-.linkRouterText a{
+.linkRouterText a {
   color: #000;
+}
+.openNavPage a:link {
+  text-decoration: none;
+}
+.openNavPage a:visited {
+  text-decoration: none;
+}
+.openNavPage a:hover {
+  text-decoration: none;
+}
+.openNavPage a:active {
+  text-decoration: none;
+}
+.openNavPage a {
+  color: #fff;
+}
+.openNav {
+  width: 100%;
+  height: 4rem;
+  border-radius: 0 0 10px 10px;
+  background-color: #219361;
+}
+.openNavPageConten {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.openNavText p {
+  font-weight: bold;
+  font-size: 12px;
+}
+.openNavPages {
+  display: flex;
+  justify-content: space-evenly;
+}
+.openNavPage{
+  padding: 10px 0;
+}
+@media screen and (min-width: 761px) {
+  .openNav {
+    display: none;
+  }
+}
+@media screen and (max-width: 760px) {
+  .nav {
+    display: none;
+  }
 }

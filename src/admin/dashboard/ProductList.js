@@ -19,7 +19,7 @@ import DashboardModal from "../ui/DashboardModal";
 import TextField from "@mui/material/TextField";
 import AddBoxIcon from "@mui/icons-material/AddBox";
 import { Button } from "@mui/material";
-
+import useFirebaseGet from "../../hook/useFirebase";
 function PropertiesInputComponent({ setProperties }) {
   const [property, setProperty] = useState();
   const changePropertyValue = (e) => {
@@ -272,6 +272,16 @@ function EditProductComponent({ item, category, typeId }) {
 
 function DeleteProductComponent({ item, category, typeId }) {
   const [deleteToggle, setDeleteToggle] = useState(false);
+  const typeLength = useSelector((state) => state.product.typeLength);
+  const minusProductCount = () => {
+    const query = db
+      .collection(category)
+      .doc(typeId)
+      .update({
+        count: typeLength - 1,
+      });
+    return query;
+  };
   const deleteConfirm = async () => {
     const query = await db
       .collection(category)
@@ -280,6 +290,7 @@ function DeleteProductComponent({ item, category, typeId }) {
       .doc(item.id)
       .delete();
     await setDeleteToggle(false);
+    await minusProductCount();
     return query;
   };
   return (
@@ -324,6 +335,7 @@ export default function ProductList({ category }) {
       fetchItemList();
     }
   }, [typeId]);
+  const [data] = useFirebaseGet(typeId, [category, typeId], ["product"]);
   const fetchItemList = () => {
     const query = db
       .collection(category)

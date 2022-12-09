@@ -34,6 +34,7 @@
 }
 .footerInfoBox {
   display: flex;
+  flex-wrap: wrap;
   width: 100%;
 }
 .footerMainInfo,
@@ -50,6 +51,7 @@
 .footerSubInfo {
   display: flex;
   flex-wrap: wrap;
+  justify-content: center;
 }
 .footerSubInfoContent {
   width: 30%;
@@ -93,4 +95,16 @@
 .copyWrite {
   padding-top: 1rem;
   padding-bottom: 2rem;
+}
+@media screen and (max-width: 760px) {
+  .footerMainInfo,
+  .footerSubInfo {
+    width: 100%;
+  }
+  .footerMainInfo p {
+    text-align: center;
+  }
+  .footerSubTitle {
+    padding: 5rem 5rem 0 5rem;
+  }
 }
